@@ -259,10 +259,10 @@ int main()
             min_idx.push_back(i);
         }
     }
-    // for (auto it = min_idx.cbegin(); it != min_idx.cend(); it++)
-    // {
-    //     cout << *it << " " << endl;
-    // }
+    for (auto it = min_idx.cbegin(); it != min_idx.cend(); it++)
+    {
+        cout << *it << " " << endl;
+    }
     vector<vector<int>> gr_cyc;
     for (auto it = min_idx.cbegin(); it != min_idx.cend(); it++)
     {
