@@ -45,6 +45,7 @@ void getAllCycleDFS(int cur_v)
             {
                 path[cur_path_num][i] = p_tmp[i];
             }
+            path[cur_path_num][v_cnt + 1] = p_tmp[1];
         }
     }
     visit[p_tmp[v_cnt]] = 0;
@@ -170,7 +171,7 @@ int main()
     size_t am_size = vt.size();
     for (int i = 0; i < am_size; i++)
     {
-        adjmat[i][i] = 0;
+        // adjmat[i][i] = 0;
         if (i >= 1)
         {
             adjmat[i][0] = max_latency + 1;
@@ -198,10 +199,13 @@ int main()
         vector<int> tmp_vec(10, 0);
         path.push_back(tmp_vec);
     }
-    v_cnt = 1;             //let vertex count start from 1
-    int cur_v = 0;         //start from the vervex 0
-    p_tmp[v_cnt] = cur_v;  //put current vertex into the temporary path holder
-    getAllCycleDFS(cur_v); //call this function to find cycles which all start from current v
+    for (int i = 0; i < vt.size(); i++)
+    {
+        v_cnt = 1;             //let vertex count start from 1
+        int cur_v = i;         //start from the vervex 0
+        p_tmp[v_cnt] = cur_v;  //put current vertex into the temporary path holder
+        getAllCycleDFS(cur_v); //call this function to find cycles which all start from current v
+    }
     //print the path array
     cout << path[0][0] << endl;
     for (int i = 1; i < 10; i++)
