@@ -21,6 +21,7 @@ bool myComparison(int a, int b)
 vector<vector<int>> adjmat; //adjcent matrix that holds the edges
 vector<int> visit(10);      //flag indicates whether it's been visited
 vector<vector<int>> path;   //holds the cycle paths
+                            //p.s. path[0][0] holds the number of the cycles, and p[i][0] holds the number of vertex along the cyccle i
 int v_cnt = 1;              //holds the number of vertexs while searching cycles
 vector<int> p_tmp(10);      //holds the temporary path
 
@@ -187,19 +188,21 @@ int main()
     //     cout<< endl;
     // }
 
-    for (int i = 0; i < 10; i++)
+    //search for cycles in the graph
+    for (int i = 0; i < 10; i++) //initialize visit flags
     {
         visit[i] = 0;
     }
-    for (int i = 0; i <= 10; i++)
+    for (int i = 0; i <= 10; i++) //initialize path array
     {
         vector<int> tmp_vec(10, 0);
         path.push_back(tmp_vec);
     }
-    v_cnt = 1;
-    int cur_v = 0;
-    p_tmp[v_cnt] = cur_v;
-    getAllCycleDFS(cur_v);
+    v_cnt = 1;             //let vertex count start from 1
+    int cur_v = 0;         //start from the vervex 0
+    p_tmp[v_cnt] = cur_v;  //put current vertex into the temporary path holder
+    getAllCycleDFS(cur_v); //call this function to find cycles which all start from current v
+    //print the path array
     cout << path[0][0] << endl;
     for (int i = 1; i < 10; i++)
     {
@@ -211,7 +214,7 @@ int main()
         }
         cout << endl;
     }
-
+    //calculate the latency cycles
     vector<vector<int>> cycles;
     vector<int> cyc_tmp;
     vector<int> cyc_len;
@@ -230,10 +233,9 @@ int main()
         cycles.push_back(cyc_tmp);
         cyc_tmp.clear();
     }
-
+    //calculae the greedy cycles
     int cyc_num = cycles.size();
     int min = 100;
-    int min_idx = 0;
     for (int i = 0; i < cyc_num; i++)
     {
         int sum_tmp = accumulate(cycles[i].begin(), cycles[i].end(), 0);
@@ -241,10 +243,37 @@ int main()
         if (avg_tmp < min)
         {
             min = avg_tmp;
-            min_idx = i;
         }
     }
-    cout << min << " " << min_idx << endl;
+    vector<int> min_idx;
+    for (int i = 0; i < cyc_num; i++)
+    {
+        int sum_tmp = accumulate(cycles[i].begin(), cycles[i].end(), 0);
+        int avg_tmp = sum_tmp / cyc_len[i];
+        if (avg_tmp == min)
+        {
+            min_idx.push_back(i);
+        }
+    }
+    // for (auto it = min_idx.cbegin(); it != min_idx.cend(); it++)
+    // {
+    //     cout << *it << " " << endl;
+    // }
+    vector<vector<int>> gr_cyc;
+    for (auto it = min_idx.cbegin(); it != min_idx.cend(); it++)
+    {
+        gr_cyc.push_back(cycles[*it]);
+    }
+    for (auto it = gr_cyc.cbegin(); it != gr_cyc.cend(); it++)
+    {
+        auto grc_tmp = *it;
+        cout << "(";
+        for (auto it2 = grc_tmp.cbegin(); it2 != grc_tmp.cend(); it2++)
+        {
+            cout << *it2 << " ";
+        }
+        cout << ")" << endl;
+    }
 
     return 0;
 }
